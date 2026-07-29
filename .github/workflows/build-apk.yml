@@ -1,0 +1,84 @@
+name: Build HTML Game APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      
+      - name: Install Cordova
+        run: npm install -g cordova
+      
+      - name: Create Cordova Project
+        run: |
+          cordova create temp-project com.yourname.yourgame "YourGameName"
+          cd temp-project
+          cordova platform add android
+      
+      - name: Extract ZIP File
+        run: |
+          # Check karo game.zip hai ya nahi
+          if [ -f "game.zip" ]; then
+            echo "Found game.zip, extracting..."
+            unzip -o game.zip -d extracted-game/
+            
+            # Agar ZIP ke andar ek single folder hai, uske contents bahar nikalo
+            if [ "$(ls -1 extracted-game/ | wc -l)" -eq 1 ] && [ -d "extracted-game/$(ls extracted-game/)" ]; then
+              FOLDER_NAME=$(ls extracted-game/)
+              mv extracted-game/$FOLDER_NAME/* temp-project/www/
+              mv extracted-game/$FOLDER_NAME/.* temp-project/www/ 2>/dev/null || true
+            else
+              # Direct files hain ZIP ke andar
+              mv extracted-game/* temp-project/www/
+              mv extracted-game/.* temp-project/www/ 2>/dev/null || true
+            fi
+            
+            # Cleanup
+            rm -rf extracted-game game.zip
+          else
+            echo "No game.zip found, checking www folder..."
+            if [ -d "www" ]; then
+              cp -r www/* temp-project/www/
+            else
+              echo "ERROR: Neither game.zip nor www folder found!"
+              exit 1
+            fi
+          fi
+      
+      - name: Copy Config
+        run: |
+          if [ -f "config.xml" ]; then
+            cp config.xml temp-project/config.xml
+          fi
+      
+      - name: Build Debug APK
+        run: |
+          cd temp-project
+          cordova build android
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-apk
+          path: temp-project/platforms/android/app/build/outputs/apk/debug/app-debug.apk
