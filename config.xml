@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.yourname.yourgame" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
+    <name>YourGameName</name>
+    <description>My HTML Game</description>
+    <author email="you@example.com" href="https://github.com/you">Your Name</author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="Orientation" value="landscape" />
+    <preference name="Fullscreen" value="true" />
+    <preference name="DisallowOverscroll" value="true" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+</widget>
