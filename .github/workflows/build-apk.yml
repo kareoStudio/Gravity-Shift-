@@ -36,26 +36,30 @@ jobs:
           cd temp-project
           cordova platform add android
       
-      - name: Extract ZIP File
+      - name: Extract ZIP & Copy Game Files
         run: |
-          # Check karo game.zip hai ya nahi
+          # Step 1: Pehle Cordova ki default www clean karo
+          echo "Cleaning default www folder..."
+          rm -rf temp-project/www/*
+          
+          # Step 2: ZIP extract karo
           if [ -f "game.zip" ]; then
             echo "Found game.zip, extracting..."
             unzip -o game.zip -d extracted-game/
             
-            # Agar ZIP ke andar ek single folder hai, uske contents bahar nikalo
+            # Step 3: Smart copy - agar single folder hai toh uske andar se nikalo
             if [ "$(ls -1 extracted-game/ | wc -l)" -eq 1 ] && [ -d "extracted-game/$(ls extracted-game/)" ]; then
               FOLDER_NAME=$(ls extracted-game/)
-              mv extracted-game/$FOLDER_NAME/* temp-project/www/
-              mv extracted-game/$FOLDER_NAME/.* temp-project/www/ 2>/dev/null || true
+              echo "Single folder detected: $FOLDER_NAME"
+              cp -r extracted-game/$FOLDER_NAME/* temp-project/www/
+              cp -r extracted-game/$FOLDER_NAME/.* temp-project/www/ 2>/dev/null || true
             else
-              # Direct files hain ZIP ke andar
-              mv extracted-game/* temp-project/www/
-              mv extracted-game/.* temp-project/www/ 2>/dev/null || true
+              echo "Direct files detected"
+              cp -r extracted-game/* temp-project/www/
+              cp -r extracted-game/.* temp-project/www/ 2>/dev/null || true
             fi
             
-            # Cleanup
-            rm -rf extracted-game game.zip
+            rm -rf extracted-game
           else
             echo "No game.zip found, checking www folder..."
             if [ -d "www" ]; then
@@ -65,20 +69,15 @@ jobs:
               exit 1
             fi
           fi
+          
+          echo "Files copied successfully!"
+          ls -la temp-project/www/
       
-      - name: Copy Config
+      - name: Add App Icon
         run: |
-          if [ -f "config.xml" ]; then
-            cp config.xml temp-project/config.xml
-          fi
-      
-      - name: Build Debug APK
-        run: |
-          cd temp-project
-          cordova build android
-      
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: game-apk
-          path: temp-project/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          # Agar icon.png ya icon.jpg repo mein hai toh copy karo
+          if [ -f "icon.png" ]; then
+            echo "Found icon.png, copying to resources..."
+            mkdir -p temp-project/res/icon/android
+            cp icon.png temp-project/res/icon/android/icon.png
+          elif [ -f "icon.jpg
