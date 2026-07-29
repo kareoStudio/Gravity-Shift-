@@ -8,10 +8,7 @@
     <preference name="Orientation" value="landscape" />
     <preference name="Fullscreen" value="true" />
     <preference name="DisallowOverscroll" value="true" />
-    
-    <!-- Icon Config -->
     <icon src="res/icon/android/icon.png" />
-    
     <platform name="android">
         <allow-intent href="market:*" />
         <icon src="res/icon/android/icon.png" density="ldpi" />
