@@ -32,7 +32,22 @@ jobs:
       
       - name: Create Cordova Project
         run: |
-          cordova create temp-project com.yourname.yourgame "YourGameName"
+          cordova create temp-project com.kareostudio.gravityshift "Gravity Shift"
+      
+      - name: Copy Config and Icon
+        run: |
+          if [ -f config.xml ]; then
+            cp config.xml temp-project/config.xml
+          fi
+          mkdir -p temp-project/res/icon/android
+          if [ -f icon.png ]; then
+            cp icon.png temp-project/res/icon/android/icon.png
+          elif [ -f icon.jpg ]; then
+            cp icon.jpg temp-project/res/icon/android/icon.png
+          fi
+      
+      - name: Add Android Platform
+        run: |
           cd temp-project
           cordova platform add android
       
@@ -57,23 +72,6 @@ jobs:
           fi
           ls -la temp-project/www/
       
-      - name: Add App Icon
-        run: |
-          mkdir -p temp-project/res/icon/android
-          if [ -f icon.png ]; then
-            cp icon.png temp-project/res/icon/android/icon.png
-          elif [ -f icon.jpg ]; then
-            cp icon.jpg temp-project/res/icon/android/icon.png
-          elif [ -f www/icon.png ]; then
-            cp www/icon.png temp-project/res/icon/android/icon.png
-          fi
-      
-      - name: Copy Config
-        run: |
-          if [ -f config.xml ]; then
-            cp config.xml temp-project/config.xml
-          fi
-      
       - name: Build Debug APK
         run: |
           cd temp-project
@@ -82,5 +80,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: game-apk
+          name: gravity-shift-apk
           path: temp-project/platforms/android/app/build/outputs/apk/debug/app-debug.apk
