@@ -72,6 +72,12 @@ jobs:
           fi
           ls -la temp-project/www/
       
+      - name: Update Android SDK Versions
+        run: |
+          cd temp-project/platforms/android
+          sed -i 's/targetSdkVersion.*/targetSdkVersion 34/' app/build.gradle
+          sed -i 's/compileSdkVersion.*/compileSdkVersion 34/' app/build.gradle
+      
       - name: Build Debug APK
         run: |
           cd temp-project
