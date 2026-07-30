@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.yourname.yourgame" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
-    <name>YourGameName</name>
+<widget id="com.kareostudio.gravityshift" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
+    <name>Gravity Shift</name>
     <description>My HTML Game</description>
-    <author email="you@example.com" href="https://github.com/you">Your Name</author>
+    <author email="kareobusiness23@gmail.com" href="https://github.com/KareoStudio">Kareo Studio</author>
     <content src="index.html" />
     <access origin="*" />
     <preference name="Orientation" value="landscape" />
