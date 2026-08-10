@@ -8,32 +8,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-      
+
       - name: Install Cordova
         run: npm install -g cordova
-      
+
       - name: Create Cordova Project
         run: |
           cordova create temp-project com.kareostudio.gravityshift "Gravity Shift"
-      
+
       - name: Copy Config and Icon
         run: |
           if [ -f config.xml ]; then
@@ -45,25 +45,25 @@ jobs:
           elif [ -f icon.jpg ]; then
             cp icon.jpg temp-project/res/icon/android/icon.png
           fi
-      
+
       - name: Add Android Platform
         run: |
           cd temp-project
           cordova platform add android
-      
+
       - name: Install Required Cordova Plugins
         run: |
           cd temp-project
           cordova plugin add cordova-plugin-device
           cordova plugin add cordova-plugin-androidx-adapter
-      
+
       - name: Install AdMob Plugin
         run: |
           cd temp-project
           cordova plugin add admob-plus-cordova \
             --variable APP_ID_ANDROID="ca-app-pub-3940256099942544~3347511713" \
             --variable PLAY_SERVICES_VERSION="22.6.0"
-      
+
       - name: Extract ZIP and Copy Game Files
         run: |
           rm -rf temp-project/www/*
@@ -84,18 +84,18 @@ jobs:
             exit 1
           fi
           ls -la temp-project/www/
-      
+
       - name: Update Android SDK Versions
         run: |
           cd temp-project/platforms/android
           sed -i 's/targetSdkVersion.*/targetSdkVersion 34/' app/build.gradle
           sed -i 's/compileSdkVersion.*/compileSdkVersion 34/' app/build.gradle
-      
+
       - name: Build Debug APK
         run: |
           cd temp-project
           cordova build android
-      
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
