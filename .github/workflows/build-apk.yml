@@ -51,6 +51,11 @@ jobs:
           cd temp-project
           cordova platform add android
       
+      - name: Install AdMob Plugin
+        run: |
+          cd temp-project
+          cordova plugin add admob-plus-cordova --variable APP_ID_ANDROID="ca-app-pub-3940256099942544~3347511713"
+      
       - name: Extract ZIP and Copy Game Files
         run: |
           rm -rf temp-project/www/*
