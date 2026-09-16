@@ -24,9 +24,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Cordova
         run: npm install -g cordova
 
@@ -88,8 +85,8 @@ jobs:
       - name: Update Android SDK Versions
         run: |
           cd temp-project/platforms/android
-          sed -i 's/targetSdkVersion.*/targetSdkVersion 34/' app/build.gradle
-          sed -i 's/compileSdkVersion.*/compileSdkVersion 34/' app/build.gradle
+          sed -i 's/targetSdkVersion.*/targetSdkVersion 34/' app/build.gradle || true
+          sed -i 's/compileSdkVersion.*/compileSdkVersion 34/' app/build.gradle || true
 
       - name: Build Debug APK
         run: |
