@@ -18,6 +18,14 @@
     <preference name="AdMobPlusWebViewAd" value="true" />
     <preference name="Fullscreen" value="true" />
 
+    <!-- Android 12+ mandatory system splash screen: use our real app icon instead of
+         Cordova's default generic placeholder, and hide it as fast as possible. -->
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon/android/icon.png" />
+    <preference name="AndroidWindowSplashScreenBackground" value="#1a2b47" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="SplashScreenDelay" value="0" />
+    <preference name="FadeSplashScreen" value="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
